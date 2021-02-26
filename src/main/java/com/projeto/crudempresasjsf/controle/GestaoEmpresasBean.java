@@ -2,6 +2,7 @@ package com.projeto.crudempresasjsf.controle;
 
 import com.projeto.crudempresasjsf.modelo.Empresa;
 import com.projeto.crudempresasjsf.repositorio.EmpresaRepositorio;
+import com.projeto.crudempresasjsf.util.FacesMessages;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,7 +20,12 @@ public class GestaoEmpresasBean implements Serializable {
     @Inject
     private EmpresaRepositorio empresas;
 
+    @Inject
+    private FacesMessages messages;
+
     private List<Empresa> listaEmpresas;
+
+    private String termoPesquisa;
 
     public void todasEmpresas() {
         listaEmpresas = empresas.listar();
@@ -27,6 +33,22 @@ public class GestaoEmpresasBean implements Serializable {
 
     public List<Empresa> getListaEmpresas() {
         return listaEmpresas;
+    }
+
+    public String getTermoPesquisa() {
+        return termoPesquisa;
+    }
+
+    public void setTermoPesquisa(String termoPesquisa) {
+        this.termoPesquisa = termoPesquisa;
+    }
+
+    public void pesquisar() {
+        listaEmpresas = empresas.pesquisarPorNome(termoPesquisa);
+
+        if (listaEmpresas.isEmpty()) {
+            messages.info("Sua consulta não retornou registros.");
+        }
     }
 
     
