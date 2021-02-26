@@ -1,6 +1,7 @@
 package com.projeto.crudempresasjsf.controle;
 
 import com.projeto.crudempresasjsf.modelo.Empresa;
+import com.projeto.crudempresasjsf.modelo.TipoEmpresa;
 import com.projeto.crudempresasjsf.repositorio.EmpresaRepositorio;
 import com.projeto.crudempresasjsf.util.FacesMessages;
 import java.io.Serializable;
@@ -43,6 +44,10 @@ public class GestaoEmpresasBean implements Serializable {
         this.termoPesquisa = termoPesquisa;
     }
 
+    public TipoEmpresa[] getTiposEmpresa() {
+        return TipoEmpresa.values();
+    }
+
     public void pesquisar() {
         listaEmpresas = empresas.pesquisarPorNome(termoPesquisa);
 
@@ -50,7 +55,7 @@ public class GestaoEmpresasBean implements Serializable {
             messages.info("Sua consulta não retornou registros.");
         }
     }
+    
+    
 
-    
-    
 }
