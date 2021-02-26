@@ -5,6 +5,7 @@ import com.projeto.crudempresasjsf.modelo.RamoAtividade;
 import com.projeto.crudempresasjsf.modelo.TipoEmpresa;
 import com.projeto.crudempresasjsf.repositorio.EmpresaRepositorio;
 import com.projeto.crudempresasjsf.repositorio.RamoAtividadeRepositorio;
+import com.projeto.crudempresasjsf.servico.CadastroEmpresaServico;
 import com.projeto.crudempresasjsf.util.FacesMessages;
 import java.io.Serializable;
 import java.util.List;
@@ -26,15 +27,21 @@ public class GestaoEmpresasBean implements Serializable {
 
     @Inject
     private FacesMessages messages;
-    
+
     @Inject
     private RamoAtividadeRepositorio ramoAtividades;
+    
+    
+    @Inject
+    private CadastroEmpresaServico cadastroEmpresaService;
 
     private List<Empresa> listaEmpresas;
 
     private String termoPesquisa;
-    
+
     private Converter ramoAtividadeConverter;
+
+    private Empresa empresa;
 
     public void todasEmpresas() {
         listaEmpresas = empresas.listar();
@@ -55,10 +62,17 @@ public class GestaoEmpresasBean implements Serializable {
     public TipoEmpresa[] getTiposEmpresa() {
         return TipoEmpresa.values();
     }
-    
-    
+
     public Converter getRamoAtividadeConverter() {
         return ramoAtividadeConverter;
+    }
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    private boolean jaHouvePesquisa() {
+        return termoPesquisa != null && !"".equals(termoPesquisa);
     }
 
     public void pesquisar() {
@@ -68,16 +82,29 @@ public class GestaoEmpresasBean implements Serializable {
             messages.info("Sua consulta não retornou registros.");
         }
     }
-    
-    
-    
+
     public List<RamoAtividade> completarRamoAtividade(String termo) {
         List<RamoAtividade> listaRamoAtividades = ramoAtividades.pesquisarPorDescricao(termo);
-        
+
         ramoAtividadeConverter = new RamoAtividadeConverter(listaRamoAtividades);
-        
+
         return listaRamoAtividades;
     }
+
+    public void prepararNovaEmpresa() {
+        empresa = new Empresa();
+    }
+
+    public void salvar() {
+        cadastroEmpresaService.salvar(empresa);
+
+        if (jaHouvePesquisa()) {
+            pesquisar();
+        }
+
+        messages.info("Empresa cadastrada com sucesso!");
+    }
+    
     
     
 
