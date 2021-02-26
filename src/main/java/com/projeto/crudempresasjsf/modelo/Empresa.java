@@ -16,6 +16,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 @Entity
 @Table(name = "empresa")
@@ -27,23 +31,31 @@ public class Empresa implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty //campo nao pode ser vazio nem nulo
     @Column(name = "nome_fantasia", nullable = false, length = 80) //nao pode ser nulo
     private String nomeFantasia;
 
+    @NotEmpty //campo nao pode ser vazio nem nulo
     @Column(name = "razao_social", nullable = false, length = 120)//nao pode ser nulo
     private String razaoSocial;
 
+    @CNPJ
+    @NotNull  //campo nao pode ser nulo
     @Column(nullable = false, length = 18)//nao pode ser nulo
     private String cnpj;
 
+    @NotNull  //campo campo nao pode ser nulo
+    @Past //obriga o usuario a digitar uma data que esteja no passado
     @Temporal(TemporalType.DATE)
     @Column(name = "data_fundacao")
     private Date dataFundacao;
 
+    @NotNull  //campo nao pode ser nulo
     @ManyToOne   //muitas empresas tem um ramo atividade
     @JoinColumn(name = "ramo_atividade_id", nullable = false)//nao pode ser nulo
     private RamoAtividade ramoAtividade;
 
+    @NotNull  //campo nao pode ser nulo
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)//nao pode ser nulo
     private TipoEmpresa tipo;

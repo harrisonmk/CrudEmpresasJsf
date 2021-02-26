@@ -8,6 +8,7 @@ import com.projeto.crudempresasjsf.repositorio.RamoAtividadeRepositorio;
 import com.projeto.crudempresasjsf.servico.CadastroEmpresaServico;
 import com.projeto.crudempresasjsf.util.FacesMessages;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import javax.faces.convert.Converter;
 
@@ -15,6 +16,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 
 import javax.inject.Named;
+import org.primefaces.PrimeFaces;
 
 @Named
 @ViewScoped
@@ -30,8 +32,7 @@ public class GestaoEmpresasBean implements Serializable {
 
     @Inject
     private RamoAtividadeRepositorio ramoAtividades;
-    
-    
+
     @Inject
     private CadastroEmpresaServico cadastroEmpresaService;
 
@@ -75,6 +76,8 @@ public class GestaoEmpresasBean implements Serializable {
         return termoPesquisa != null && !"".equals(termoPesquisa);
     }
 
+    
+    
     public void pesquisar() {
         listaEmpresas = empresas.pesquisarPorNome(termoPesquisa);
 
@@ -83,6 +86,8 @@ public class GestaoEmpresasBean implements Serializable {
         }
     }
 
+    
+    
     public List<RamoAtividade> completarRamoAtividade(String termo) {
         List<RamoAtividade> listaRamoAtividades = ramoAtividades.pesquisarPorDescricao(termo);
 
@@ -91,18 +96,26 @@ public class GestaoEmpresasBean implements Serializable {
         return listaRamoAtividades;
     }
 
+    
+    
     public void prepararNovaEmpresa() {
         empresa = new Empresa();
     }
 
+    
     public void salvar() {
         cadastroEmpresaService.salvar(empresa);
 
         if (jaHouvePesquisa()) {
             pesquisar();
+        } else {
+            todasEmpresas();
         }
 
         messages.info("Empresa cadastrada com sucesso!");
+
+        PrimeFaces.current().ajax().update(Arrays.asList("frm:empresasDataTable", "frm:messages"));
+
     }
     
     
