@@ -80,6 +80,8 @@ public class GestaoEmpresasBean implements Serializable {
         return termoPesquisa != null && !"".equals(termoPesquisa);
     }
 
+    
+    
     public void pesquisar() {
         listaEmpresas = empresas.pesquisarPorNome(termoPesquisa);
 
@@ -88,6 +90,8 @@ public class GestaoEmpresasBean implements Serializable {
         }
     }
 
+    
+    
     public List<RamoAtividade> completarRamoAtividade(String termo) {
         List<RamoAtividade> listaRamoAtividades = ramoAtividades.pesquisarPorDescricao(termo);
 
@@ -96,10 +100,14 @@ public class GestaoEmpresasBean implements Serializable {
         return listaRamoAtividades;
     }
 
+    
+    
     public void prepararNovaEmpresa() {
         empresa = new Empresa();
     }
 
+    
+    
     public void salvar() {
         cadastroEmpresaService.salvar(empresa);
 
@@ -115,10 +123,41 @@ public class GestaoEmpresasBean implements Serializable {
 
     }
 
+    
+    
+    public void excluir() {
+        cadastroEmpresaService.excluir(empresa);
+
+        empresa = null;
+
+        atualizarRegistros();
+
+        messages.info("Empresa excluída com sucesso!");
+    }
+
+    
+    
+    private void atualizarRegistros() {
+        if (jaHouvePesquisa()) {
+            pesquisar();
+        } else {
+            todasEmpresas();
+        }
+    }
+
+    
+    
     public boolean isEmpresaSeleciona() {
         return empresa != null && empresa.getId() != null;
     }
 
+    
+    
+    public void prepararEdicao() {
+
+        ramoAtividadeConverter = new RamoAtividadeConverter(Arrays.asList(empresa.getRamoAtividade()));
+
+    }
     
     
 
